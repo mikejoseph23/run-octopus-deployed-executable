@@ -1,7 +1,7 @@
 ﻿{
   "version": "1.0",
   "rodeInstanceName": "RODE",
-  "octopusTentacleApplicationsBaseDirectory": "D:\\OctopusTentacle\\Applications\\",
+  "octopusTentacleApplicationsBaseDirectory": "C:\\Octopus\\Applications\\",
   "logDirectory": "C:\\Temp\\RodeLogs\\",
   "enableLogging": true,
   "emailNotificationSettings": {
@@ -11,13 +11,24 @@
   },
   "tasks": [
     {
+      "id": "Test",
+      "octopusEnvironmentName": "UAT",
+      "octopusApplicationName": "StopWatchez",
+      "executablePath": "Test.bat",
+      "executableArguments": null,
+      "overrideToAddresses": null,
+      "overrideFromAddress": null
+    }
+  ],
+  "tasks_Prod": [
+    {
       "id": "IdleTimerReminders",
       "octopusEnvironmentName": "UAT",
       "octopusApplicationName": "StopWatchez",
       "executablePath": "Timer.Reminders/bin/Release/Timer.Reminders.exe",
       "executableArguments": null,
       "overrideToAddresses": null,
-      "overrideFromAddress":  null 
+      "overrideFromAddress": null
     }
   ]
 }

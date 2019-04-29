@@ -6,7 +6,7 @@
         {
             var rode = new Rode();
             //rode.RunTask(args[0]);
-            rode.RunTask("IdleTimerReminders");
+            rode.RunTask("Test");
         }
     }
 }

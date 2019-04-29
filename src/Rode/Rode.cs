@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Configuration;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -19,6 +19,9 @@ namespace Rode
         public void RunTask(string taskId)
         {
             _config = GetConfig();
+            LogFolderPath = _config.LogDirectory;
+            Logs = new List<ActivityLog>();
+
             CreateJobFolder();
 
             try
@@ -52,8 +55,6 @@ namespace Rode
 
         private void RunRodeTask(string taskId)
         {
-            LogFolderPath = _config.LogDirectory;
-
             _task = _config.Tasks.SingleOrDefault(x => x.Id == taskId);
             if (_task == null)
             {
@@ -83,7 +84,7 @@ namespace Rode
 
             // Form the path:
             var exePath = _task.ExecutablePath;
-            var path = string.Concat(octopusApplicationFolder, folders.First().Name, "\\", exePath);
+            var path = Path.Combine(octopusApplicationFolderPath, folders.First().Name, exePath);
             if (!File.Exists(path))
             {
                 AppendToLog("Could not find the path: " + path, true);
