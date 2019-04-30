@@ -16,17 +16,19 @@
       "octopusApplicationName": "StopWatchez",
       "executablePath": "Test.bat",
       "executableArguments": null,
+      "overrideEnableLogging": false,
+      "overrideEnableNotification": true,
       "overrideToAddresses": null,
       "overrideFromAddress": null
-    }
-  ],
-  "tasks_Prod": [
+    },
     {
       "id": "IdleTimerReminders",
       "octopusEnvironmentName": "UAT",
       "octopusApplicationName": "StopWatchez",
       "executablePath": "Timer.Reminders/bin/Release/Timer.Reminders.exe",
       "executableArguments": null,
+      "overrideEnableLogging": false,
+      "overrideEnableNotification": false,
       "overrideToAddresses": null,
       "overrideFromAddress": null
     }

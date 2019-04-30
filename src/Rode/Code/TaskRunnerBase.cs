@@ -77,6 +77,7 @@ namespace Rode.Code
 
         protected void WriteLogFile(string filePath = "")
         {
+            CreateJobFolder();
             if (filePath == "") filePath = Path.Combine(JobFolderPath, "log.json");
             File.WriteAllText(filePath, JsonConvert.SerializeObject(Logs, Formatting.Indented));
         }
@@ -86,9 +87,9 @@ namespace Rode.Code
             if (Logs.Any(x => x.IsError)) emailSubject = $"Error Occurred - {emailSubject}";
             var msg = new MailMessage(fromAddress, recipientsSeparatedByCommas);
             msg.Subject = emailSubject;
-            var attachmentStream = GenerateStreamFromString(GetHumanReadableLogContents());
-            msg.Attachments.Add(new Attachment(attachmentStream, "log.txt"));
-            msg.Body = "";
+            //var attachmentStream = GenerateStreamFromString(GetHumanReadableLogContents());
+            //msg.Attachments.Add(new Attachment(attachmentStream, "log.txt"));
+            msg.Body = GetHumanReadableLogContents();
             msg.IsBodyHtml = false;
             var client = new SmtpClient();
             client.Send(msg);

@@ -12,6 +12,10 @@
 
         public string ExecutableArguments { get; set; }
 
+        public bool? OverrideEnableLogging { get; set; }
+
+        public bool? OverrideEnableNotification { get; set; }
+
         public string OverrideToAddresses { get; set; }
 
         public string OverrideFromAddress { get; set; }

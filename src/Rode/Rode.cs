@@ -14,15 +14,16 @@ namespace Rode
     {
         private AppConfig _config;
         private Task _task = null;
+        private string _taskId = "";
         private readonly StringBuilder _processOutput = new StringBuilder();
+        private bool _errorOccurred = false;
 
         public void RunTask(string taskId)
         {
             _config = GetConfig();
+            _taskId = taskId;
             LogFolderPath = _config.LogDirectory;
             Logs = new List<ActivityLog>();
-
-            CreateJobFolder();
 
             try
             {
@@ -30,27 +31,43 @@ namespace Rode
             }
             catch (Exception e)
             {
+                _errorOccurred = true;
                 AppendToLog(JsonConvert.SerializeObject(e), true);
                 throw;
             }
             finally
             {
-                if (_config.EnableLogging) WriteLogFile();
-                if (_config.EmailNotificationSettings.Enabled)
+                var writeLogFile = _errorOccurred || _config.EnableLogging;
+                var sendNotification = _errorOccurred || _config.EmailNotificationSettings.Enabled;
+
+                if (_task != null)
                 {
-                    var emailSubject = $"{_task.Id} Process ({_task.OctopusEnvironmentName})";
-                    var fromAddress = _config.EmailNotificationSettings.DefaultFromAddress;
-                    var recipients = _config.EmailNotificationSettings.DefaultToAddresses;
+                    if (_task.OverrideEnableNotification.HasValue)
+                        sendNotification = _task.OverrideEnableNotification.Value;
 
-                    if (_task != null)
-                    {
-                        if (!string.IsNullOrEmpty(_task.OverrideFromAddress)) fromAddress = _task.OverrideFromAddress;
-                        if (!string.IsNullOrEmpty(_task.OverrideToAddresses)) fromAddress = _task.OverrideToAddresses;
-                    }
-
-                    EmailLog(fromAddress, recipients, emailSubject);
+                    if (_task.OverrideEnableLogging.HasValue)
+                        writeLogFile = _task.OverrideEnableLogging.Value;
                 }
+
+                if (writeLogFile) WriteLogFile();
+                if (sendNotification) SendNotification();
             }
+        }
+
+        private void SendNotification()
+        {
+            var fromAddress = _config.EmailNotificationSettings.DefaultFromAddress;
+            var recipients = _config.EmailNotificationSettings.DefaultToAddresses;
+            var emailSubject = $"RODE Process Failed for {_taskId}";
+            
+            if (_task != null)
+            {
+                if (!string.IsNullOrEmpty(_task.OverrideFromAddress)) fromAddress = _task.OverrideFromAddress;
+                if (!string.IsNullOrEmpty(_task.OverrideToAddresses)) fromAddress = _task.OverrideToAddresses;
+                emailSubject = $"{_task.Id} Process ({_task.OctopusEnvironmentName})";
+            }
+
+            EmailLog(fromAddress, recipients, emailSubject);
         }
 
         private void RunRodeTask(string taskId)
