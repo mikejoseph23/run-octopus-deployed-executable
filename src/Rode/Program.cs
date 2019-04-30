@@ -5,8 +5,7 @@
         static void Main(string[] args)
         {
             var rode = new Rode();
-            //rode.RunTask(args[0]);
-            rode.RunTask("Test");
+            rode.RunTask(args[0]);
         }
     }
 }
