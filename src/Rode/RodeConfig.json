@@ -23,7 +23,7 @@
     },
     {
       "id": "IdleTimerReminders",
-      "octopusEnvironmentName": "UAT",
+      "octopusEnvironmentName": "Production",
       "octopusApplicationName": "StopWatchez",
       "executablePath": "Timer.Reminders/bin/Release/Timer.Reminders.exe",
       "executableArguments": null,

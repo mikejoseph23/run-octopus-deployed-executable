@@ -40,7 +40,7 @@ namespace Rode
                 var writeLogFile = _errorOccurred || _config.EnableLogging;
                 var sendNotification = _errorOccurred || _config.EmailNotificationSettings.Enabled;
 
-                if (_task != null)
+                if (!_errorOccurred && _task != null)
                 {
                     if (_task.OverrideEnableNotification.HasValue)
                         sendNotification = _task.OverrideEnableNotification.Value;
@@ -76,6 +76,7 @@ namespace Rode
             if (_task == null)
             {
                 AppendToLog("Could not find the task ID " + taskId, true);
+                _errorOccurred = true;
                 return;
             }
 
@@ -86,6 +87,7 @@ namespace Rode
             if (!Directory.Exists(baseOctopusApplicationsFolderPath))
             {
                 AppendToLog("The base Octopus 'Applications' directory was not found: " + baseOctopusApplicationsFolderPath, true);
+                _errorOccurred = true;
                 return;
             }
 
@@ -96,6 +98,7 @@ namespace Rode
             if (folders.Count == 0)
             {
                 AppendToLog("No folders were found in the directory: " + octopusApplicationFolder, true);
+                _errorOccurred = true;
                 return;
             }
 
@@ -105,6 +108,7 @@ namespace Rode
             if (!File.Exists(path))
             {
                 AppendToLog("Could not find the path: " + path, true);
+                _errorOccurred = true;
                 return;
             }
 
